@@ -3,7 +3,7 @@
 https://githubeventchecker.netlify.com/
 
 ![deploy1](deploy1.jpg)
-![diploy2](deploy2.jpg)
+![d2ploy2](deploy2.jpg)
 
 ## Due Date
 Due by 9am on August 12th
