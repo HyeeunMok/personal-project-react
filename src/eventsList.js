@@ -13,7 +13,7 @@ const EventPanel = ({ index, url, title, subtitle }) => {
   );
 }
 
-export default ({ forkEvents, pullRequestEvents }) => {
+export default ({ events, forkEvents, pullRequestEvents }) => {
   return (
     <React.Fragment>
       <h2>My Recent Forks</h2>

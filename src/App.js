@@ -1,54 +1,42 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import Login from "./login.js";
 import Profile from "./profile.js";
+import { 
+  handleChangeUsername, 
+  handleChangeFirstName, 
+  login, 
+  handleLogout, 
+  fetchFollowers,
+  fetchEvents
+} from "./actions";
 
 class App extends Component {
-  state = {
-    loggedIn: false,
-    username: "",
-    profile: {},
-    events: []
-  }
-
   componentDidUpdate(prevProps) {
-    const {loggedIn, username} = this.state;
+    const {loggedIn, profile, username} = this.props;
 
     if (prevProps.loggedIn !== loggedIn) {
       if (loggedIn) {
-        this.fetchEvents(username);
+        this.props.fetchFollowers(profile.followers_url)
+        this.props.fetchEvents(username);
       }
     }
   }
 
-  // Handle change username
-  handleChangeUsername = e => this.setState({ username: e.target.value });
-
-  // Loggin
-  login = username => fetch(`https://api.github.com/users/${username}`)
-    .then(res => res.json())
-    .then(profile => this.setState({ loggedIn: true, profile }));
-
-  // Logout
-  logout = () => this.setState({ loggedIn: false, profile: {} })
-
-  // Fetch events from the Github API
-  fetchEvents = username => fetch(`https://api.github.com/users/${username}/events`)
-    .then(res => res.json())
-    .then(events => this.setState({ events }));
-
   render() {
     const {
       loggedIn,
-      profile,
+      profile, 
+      followers, 
+      handleLogout, 
+      handleChangeUsername, 
+      handleChangeFirstName, 
       username, 
-      events
-    } = this.state;
-
-    console.log('State Events = ', this.state.events);
-
-    // Filtering events here.
-    const forkEvents = events.filter(e => e.type === 'ForkEvent');
-    const pullRequestEvents = events.filter(e => e.type === 'PullRequestEvent');
+      firstName,
+      events,
+      forkEvents,
+      pullRequestEvents
+    } = this.props;
 
     return (
       <div className="App">
@@ -56,15 +44,19 @@ class App extends Component {
         {loggedIn ? (
           <Profile
             {...profile}
-            handleLogOut={this.logout}
+            followers={followers}
+            handleLogOut={handleLogout}
+            events={events}
             forkEvents={forkEvents}
             pullRequestEvents={pullRequestEvents}
           />
         ) : (
           <Login
-            handleChangeUsername={this.handleChangeUsername}
-            handleLogin={() => this.login(username)}
+            handleChangeUsername={handleChangeUsername}
+            handleChangeFirstName={handleChangeFirstName}
+            handleLogin={() => this.props.login(username)}
             username={username}
+            firstName={firstName}
           />
         )}
       </div>
@@ -72,4 +64,18 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => state;
+
+const mapDispatchToProps = {
+  handleChangeUsername,
+  handleChangeFirstName,
+  login,
+  handleLogout,
+  fetchFollowers,
+  fetchEvents
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
