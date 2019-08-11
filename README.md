@@ -1,5 +1,7 @@
 # Bridge Personal Project
 
+* I have to work on validation and error handling for empty strings and incorrect usernames during the login step.
+
 https://githubeventchecker.netlify.com/
 
 ![deploy1](deploy1.JPG)
